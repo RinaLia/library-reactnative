@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import bg from '../assets/image/bg-login.jpg';
 
-export default class Login extends Component {
+export default class Register extends Component {
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -21,26 +21,15 @@ export default class Login extends Component {
           </Text>
         </View>
         <View style={styles.formContainer} />
-        {/* <AuthForm /> */}
+        {/* <RegisterForm /> */}
         <View style={styles.container2}>
-          <TextInput
-            placeholder="your email"
-            returnKeyType="next"
-            onSubmitEditing={() => this.passwordInput.focus()}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="password"
-            returnKeyType="go"
-            secureTextEntry
-            style={styles.input}
-            ref={input => (this.passwordInput = input)}
-          />
           <TouchableOpacity
-            onPress={this.props.login}
+            onPress={() => this.props.navigation.navigate('register')}
+            style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>REGISTER</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('login')}
             style={styles.buttonContainer}>
             <Text style={styles.buttonText}>LOGIN</Text>
           </TouchableOpacity>
@@ -84,6 +73,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: '#5499C7',
+    marginTop: 15,
     paddingVertical: 15,
   },
   buttonText: {

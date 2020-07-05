@@ -11,6 +11,7 @@ import {
 
 import bg from '../assets/image/bg-profile.jpg';
 import avatar from '../assets/image/avatar.jpg';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -41,13 +42,16 @@ export default class Profile extends Component {
               </View>
             </View>
           </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('main')}
+            style={profileStyle.btnLogout}>
+            <Text style={profileStyle.textLogout}>Logout</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     );
   }
 }
-
-const accentHeight = 250;
 
 const profileStyle = StyleSheet.create({
   accent1: {
@@ -109,5 +113,19 @@ const profileStyle = StyleSheet.create({
     letterSpacing: 2,
     fontFamily: 'sans-serif-medium',
     marginLeft: 10,
+  },
+  input: {
+    marginLeft: 9,
+  },
+  btnLogout: {
+    alignSelf: 'center',
+    marginTop: 60,
+    backgroundColor: '#FEF9E7',
+    borderRadius: 5,
+  },
+  textLogout: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 17,
   },
 });

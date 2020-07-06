@@ -11,63 +11,56 @@ import {
   ScrollView,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
+import {getData} from '../redux/action/book';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ApiUrl from '../assets/utils/ApiUrl';
 
 import bg from '../assets/image/bg-profile.jpg';
-import cover from '../assets/image/covernya_dilan.png';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 export default class Home extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      dataAllBook: [],
+      data: [],
+      isLoading: false,
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.setState({isLoading: true}, this.getData);
     // this.loadAllBookData();
   }
-
-  async loadAllBookData() {
-    this.setState({loadingListBook: true});
-    await fetch(ApiUrl.getAllBook, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }),
-      // body: "&lihatsemua=" + "false"
-    })
+  getData = async () => {
+    const url = 'https://rnlibrary.herokuapp.com/books';
+    fetch(url)
       .then(response => response.json())
       .then(responseJson => {
-        if (responseJson.status) {
-          this.setState({dataAllBook: responseJson.data});
-          console.log(this.state.dataAllBook);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        Alert.alert('', 'Terjadi kesalahan pada aplikasi');
+        console.log(responseJson);
+        this.setState({
+          data: this.state.data.concat(responseJson.data),
+        });
       });
-    this.setState({loadingListBook: false});
-  }
+  };
+
+  ListAllBook = (image, title, genre) => (
+    <ScrollView vertical={true}>
+      <View style={dashboardStyle.collectionCard}>
+        <Image
+          style={dashboardStyle.collectionCardCover}
+          source={{uri: image}}
+        />
+        {/* {console.log(image)} */}
+        <Text style={dashboardStyle.titleBook}>{title}</Text>
+        <Text style={dashboardStyle.genreBook}>{genre}</Text>
+      </View>
+    </ScrollView>
+  );
+  // };
 
   render() {
-    const ListAllBook = () => (
-      <ScrollView horizontal={true}>
-        {/* {this.state.dataAllBook.map((item, index) => ( */}
-        <View style={dashboardStyle.collectionCard}>
-          <Image style={dashboardStyle.collectionCardCover} source={cover} />
-          <Text style={dashboardStyle.titleBook}>TEST</Text>
-          <Text style={dashboardStyle.genreBook}>Romance</Text>
-        </View>
-        {/* ))} */}
-      </ScrollView>
-    );
-
     return (
       <KeyboardAvoidingView style={dashboardStyle.parent}>
         <Image source={bg} style={dashboardStyle.accent1} />
@@ -86,7 +79,13 @@ export default class Home extends Component {
         <View style={dashboardStyle.subHeader}>
           <Text style={dashboardStyle.text}>Collections</Text>
         </View>
-        <ListAllBook />
+        {/* <renderRow /> */}
+        {/* {console.log(this.state.data.length)} */}
+        {this.state.data.length > 0
+          ? this.state.data.map(i => {
+              return this.ListAllBook(i.image, i.book_title, i.book_genre);
+            })
+          : null}
         <View />
       </KeyboardAvoidingView>
     );
@@ -146,7 +145,7 @@ const dashboardStyle = StyleSheet.create({
     borderRadius: 10,
     marginStart: 20,
     marginTop: 15,
-    backgroundColor: '#FFF',
+    // backgroundColor: '#FFF',
   },
   collectionCardCover: {
     width: 150,

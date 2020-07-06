@@ -9,89 +9,125 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
+import {connect} from 'react-redux';
+import fetchAuthor from '../../src/redux/action/fetchData';
 import bg from '../assets/image/bg-profile.jpg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default class Author extends Component {
+class Author extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataAllBook: [],
-      dataList: [
-        {
-          id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-          title: 'First Item',
-        },
-        {
-          id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-          title: 'Second Item',
-        },
-        {
-          id: '58694a0f-3da1-471f-bd96-145571e29d72',
-          title: 'Third Item',
-        },
-      ],
+      author: [],
+      isLoading: true,
     };
   }
+
+  componentDidMount() {
+    this.fetchAuthor();
+  }
+
+  fetchAuthor = async () => {
+    this.props.fetchData;
+    const {author, isLoading} = this.props.fetchData;
+    this.setState({author, isLoading});
+  };
+
   render() {
-    const ListAllData = () => (
-      <ScrollView>
-        {this.state.dataList.map((item, index) => (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginVertical: 10,
-              marginLeft: 5,
-              marginTop: 20,
-            }}>
-            <Text>{item.title}</Text>
-            <View style={{marginRight: 5, flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={{
-                  borderWidth: 1,
-                  marginRight: 5,
-                  borderRadius: 3,
-                  backgroundColor: '#CD6155',
-                  elevation: 2,
-                }}>
-                <Text>DELETE</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 3,
-                  backgroundColor: '#7DCEA0',
-                }}>
-                <Text>EDIT</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-    );
+    const {author, isLoading} = this.state;
 
     return (
-      <KeyboardAvoidingView>
-        <Image source={bg} style={historyStyle.accent1} />
-        <View style={historyStyle.accentOverlay} />
-        <View style={historyStyle.headerText}>
-          <Text style={historyStyle.textHeader}>Author</Text>
-        </View>
-        <View style={historyStyle.form}>
-          <View style={historyStyle.formCard1}>
-            <ListAllData />
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+      <FlatList
+        data={author}
+        renderItem={({item}) => (
+          <Item title={item.author} content={item.description} />
+        )}
+        keyExtractor={item => item.author}
+        refreshing={isLoading}
+      />
     );
   }
 }
 
-const accentHeight = 250;
+// <ScrollView>
+//   {this.state.dataList.map((item, index) => (
+//     <View
+//       style={{
+//         flexDirection: 'row',
+//         justifyContent: 'space-between',
+//         marginVertical: 10,
+//         marginLeft: 5,
+//         marginTop: 20,
+//       }}>
+//       <Text>{item.title}</Text>
+//       <View style={{marginRight: 5, flexDirection: 'row'}}>
+//         <TouchableOpacity
+//           style={{
+//             borderWidth: 1,
+//             marginRight: 5,
+//             borderRadius: 3,
+//             backgroundColor: '#CD6155',
+//             elevation: 2,
+//           }}>
+//           <Text>DELETE</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity
+//           style={{
+//             borderWidth: 1,
+//             borderRadius: 3,
+//             backgroundColor: '#7DCEA0',
+//           }}>
+//           <Text>EDIT</Text>
+//         </TouchableOpacity>
+//       </View>
+//     </View>
+//   ))}
+// </ScrollView>
+
+class Item extends Component {
+  render() {
+    return (
+      <View>
+        <KeyboardAvoidingView>
+          <Image source={bg} style={historyStyle.accent1} />
+          <View style={historyStyle.accentOverlay} />
+          <View style={historyStyle.headerText}>
+            <Text style={historyStyle.textHeader}>Author</Text>
+          </View>
+          <View style={historyStyle.form}>
+            <View style={historyStyle.formCard1}>
+              <ListAllData />
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+    );
+  }
+
+  // return (
+  //   <KeyboardAvoidingView>
+  //     <Image source={bg} style={historyStyle.accent1} />
+  //     <View style={historyStyle.accentOverlay} />
+  //     <View style={historyStyle.headerText}>
+  //       <Text style={historyStyle.textHeader}>Author</Text>
+  //     </View>
+  //     <View style={historyStyle.form}>
+  //       <View style={historyStyle.formCard1}>
+  //         <ListAllData />
+  //       </View>
+  //     </View>
+  //   </KeyboardAvoidingView>
+  //);
+}
+
+// const mapStateToProps = state => ({
+//   fetchData: state.fetchData,
+// });
+const mapDispatchToProps = fetchAuthor;
+export default connect(mapDispatchToProps)(Author);
 
 const historyStyle = StyleSheet.create({
   accent1: {

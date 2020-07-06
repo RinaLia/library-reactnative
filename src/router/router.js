@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 
-import {NavigationContainer, StackActions} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-// import {createBottomTabNavigator} from 'react-navigation-tabs';
-// import {createStackNavigator} from 'react-navigation-stack';
+import {connect} from 'react-redux';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
-// import Dashboard from '../screens/Dashboard/Dashboard';
 import Detail from '../screens/Detail';
 import Login from '../screens/Login';
 import Profile from '../screens/Profile';
@@ -16,6 +15,8 @@ import Main from '../screens/Main';
 import Register from '../screens/Register';
 import Home from '../screens/Home';
 import Author from '../screens/Author';
+import Genre from '../screens/Genre';
+import History from '../screens/History';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -52,6 +53,26 @@ class Tab extends Component {
           }}
           component={Author}
           name="author"
+        />
+        <BottomTab.Screen
+          options={{
+            title: 'Genre',
+            tabBarIcon: ({color, size}) => (
+              <Icon2 name="ticket" color={color} size={size} />
+            ),
+          }}
+          component={Genre}
+          name="genre"
+        />
+        <BottomTab.Screen
+          options={{
+            title: 'History',
+            tabBarIcon: ({color, size}) => (
+              <Icon2 name="history" color={color} size={size} />
+            ),
+          }}
+          component={History}
+          name="history"
         />
       </BottomTab.Navigator>
     );
@@ -105,15 +126,6 @@ export default class App extends Component {
                 }}
                 name={'logout'}
               />
-              {/* <Stack.Screen
-                component={props => (
-                  <Profile {...props} profile={this.profile} />
-                )}
-                options={{
-                  headerShown: false,
-                }}
-                name={'profile'}
-              /> */}
             </>
           )}
           {isLogin && (
@@ -128,13 +140,6 @@ export default class App extends Component {
                 component={Detail}
                 name={'detail'}
               />
-              {/* <Stack.Screen
-                component={props => <Profile {...props} profile={this.login} />}
-                options={{
-                  headerShown: false,
-                }}
-                name={'login'}
-              /> */}
             </>
           )}
         </Stack.Navigator>
@@ -142,3 +147,5 @@ export default class App extends Component {
     );
   }
 }
+
+// export default connect(mapStateToProps)(App);

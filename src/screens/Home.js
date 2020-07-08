@@ -5,157 +5,181 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  TouchableOpacity,
   KeyboardAvoidingView,
-  Alert,
+  FlatList,
   ScrollView,
+  TextInput,
 } from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
-import {getData} from '../redux/action/book';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {getBook} from '../redux/action/book';
 import bg from '../assets/image/bg-profile.jpg';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
+const API_URL = 'http://localhost:5000/';
 
-export default class Home extends Component {
-  constructor() {
-    super();
+class Home extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      data: [],
-      isLoading: false,
+      bookData: [],
+      isLoading: true,
     };
   }
 
-  componentDidMount() {
-    this.setState({isLoading: true}, this.getData);
-    // this.loadAllBookData();
-  }
-  getData = async () => {
-    const url = 'https://rnlibrary.herokuapp.com/books';
-    fetch(url)
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-        this.setState({
-          data: this.state.data.concat(responseJson.data),
-        });
-      });
+  fetchData = () => {
+    this.props.getBook();
+    const {bookData, isLoading} = this.props.book;
+    this.setState({bookData, isLoading});
   };
 
-  ListAllBook = (image, title, genre) => (
-    <ScrollView vertical={true}>
-      <View style={dashboardStyle.collectionCard}>
-        <Image
-          style={dashboardStyle.collectionCardCover}
-          source={{uri: image}}
-        />
-        {/* {console.log(image)} */}
-        <Text style={dashboardStyle.titleBook}>{title}</Text>
-        <Text style={dashboardStyle.genreBook}>{genre}</Text>
-      </View>
-    </ScrollView>
-  );
-  // };
+  componentDidMount() {
+    // console.log('book: ', this.props.book);
+    this.fetchData();
+  }
 
   render() {
+    const {bookData, isLoading} = this.state;
     return (
-      <KeyboardAvoidingView style={dashboardStyle.parent}>
-        <Image source={bg} style={dashboardStyle.accent1} />
-        <View style={dashboardStyle.header}>
-          <Text style={dashboardStyle.headerTitle}>Library</Text>
+      <View style={historyStyle.itemContainer}>
+        <Image source={bg} style={historyStyle.accent1} />
+        <View style={historyStyle.header}>
+          <Text style={historyStyle.headerText}>Collection</Text>
         </View>
-        <View style={dashboardStyle.search}>
-          <Icon name="search" size={20} style={dashboardStyle.searchIcon} />
-          <TextInput
-            placeholder="What would like to read bro"
-            autoCapitalize="none"
-            autoCorrect={false}
-            style={dashboardStyle.searchInput}
-          />
-        </View>
-        <View style={dashboardStyle.subHeader}>
-          <Text style={dashboardStyle.text}>Collections</Text>
-        </View>
-        {/* <renderRow /> */}
-        {/* {console.log(this.state.data.length)} */}
-        {this.state.data.length > 0
-          ? this.state.data.map(i => {
-              return this.ListAllBook(i.image, i.book_title, i.book_genre);
-            })
-          : null}
-        <View />
-      </KeyboardAvoidingView>
+        {/* <View style={historyStyle.inputWraper}>
+          <TextInput placeholder="Search book ..." />
+        </View> */}
+
+        <FlatList
+          style={historyStyle.flatWrapper}
+          data={bookData}
+          renderItem={({item}) => (
+            <Item title={item.book_title} image={`${API_URL}${item.image}`} />
+          )}
+          keyExtractor={item => item.id}
+          numColumns={3}
+        />
+        {/* <View style={historyStyle.btn2}>
+          <TouchableOpacity style={historyStyle.add}>
+            <Text style={historyStyle.textAdd}>Add</Text>
+          </TouchableOpacity>
+        </View> */}
+      </View>
     );
   }
 }
 
-const dashboardStyle = StyleSheet.create({
-  parent: {
-    flex: 1,
-    position: 'relative',
-  },
+class Item extends Component {
+  render() {
+    return (
+      <View style={historyStyle.parent}>
+        <View style={historyStyle.flatText}>
+          <Text style={historyStyle.textFlat}>{this.props.title}</Text>
+          <View style={historyStyle.imageWrapper}>
+            {console.log('ini image => ', this.props.image)}
+            <Image
+              style={historyStyle.img}
+              source={{uri: `${API_URL}${this.props.image}`}}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  book: state.book,
+});
+const mapDispatchToProps = {getBook};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home);
+
+const historyStyle = StyleSheet.create({
   accent1: {
     position: 'absolute',
     width: deviceWidth,
-    height: deviceHeight,
+    // height: deviceHeight,
     zIndex: 0,
+    // flex: 1,
   },
+  // accentOverlay: {
+  //   position: 'absolute',
+  //   width: deviceWidth,
+  //   height: deviceHeight,
+  // },
   header: {
     alignItems: 'center',
-    marginTop: 25,
+    // color: 'white',
+    // justifyContent: 'center',
   },
-  headerTitle: {
-    color: 'white',
-    fontSize: 28,
-    fontFamily: 'monospace',
-  },
-  search: {
-    flexDirection: 'row',
-    width: deviceWidth - 30,
-    marginLeft: 14,
-    marginTop: 20,
-  },
-  searchIcon: {
-    alignSelf: 'center',
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.5)',
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-  },
-  subHeader: {
-    marginTop: 8,
-    marginLeft: 18,
-  },
-  text: {
+  headerText: {
     color: 'white',
     fontSize: 25,
-    fontFamily: 'sans-serif-condensed',
+    marginTop: 20,
+    fontFamily: 'monospace',
   },
-  collectionCard: {
-    width: 150,
-    height: 160,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginStart: 20,
+  flatText: {
+    // marginVertical: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingVertical: 5,
+
+    // backgroundColor: 'black',
+  },
+  textFlat: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    paddingLeft: 10,
+  },
+
+  label: {
     marginTop: 15,
-    // backgroundColor: '#FFF',
+    paddingLeft: 15,
+    fontSize: 18,
+    // backgroundColor: 'red',
   },
-  collectionCardCover: {
-    width: 150,
-    height: 90,
+  parent: {
+    flex: 1,
+    backgroundColor: '#FEF9E7',
+    // padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    // borderRadius: 10,
+    // marginHorizontal: 16,
+    // marginTop: 10,
   },
-  titleBook: {
-    marginTop: 5,
+  title: {
+    fontSize: 32,
+  },
+  flatWrapper: {
+    marginTop: 40,
+  },
+
+  // btn2: {
+  //   alignSelf: 'center',
+  //   marginTop: 20,
+  // },
+
+  textAdd: {
     alignSelf: 'center',
+    fontSize: 16,
   },
-  genreBook: {
-    alignSelf: 'center',
+  imageWrapper: {
+    width: 100,
+    height: 150,
+    margin: 5,
+
+    borderRadius: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+  },
+  img: {
+    height: 100,
   },
 });

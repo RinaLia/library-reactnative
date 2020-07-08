@@ -2,20 +2,20 @@ const initialState = {
   isLoading: false,
   isError: false,
   errorMsg: '',
-  bookData: [],
+  authorData: [],
   pageInfo: [],
 };
 
-const bookReducers = (state = initialState, action) => {
+const authorReducers = (state = initialState, action) => {
   switch (action.type) {
-    case 'GETBOOK_PENDING': {
+    case 'GETAUTHOR_PENDING': {
       return {
         ...state,
         isLoading: true,
         isError: false,
       };
     }
-    case 'GETBOOK_REJECTED': {
+    case 'GETAUTHOR_REJECTED': {
       return {
         ...state,
         isLoading: false,
@@ -23,12 +23,12 @@ const bookReducers = (state = initialState, action) => {
         errorMsg: action.payload.response.data.message,
       };
     }
-    case 'GETBOOK_FULFILLED': {
+    case 'GETAUTHOR_FULFILLED': {
       return {
         ...state,
         isLoading: false,
         isError: false,
-        bookData: action.payload.data.data,
+        authorData: action.payload.data.data,
         pageInfo: action.payload.data.pageInfo,
       };
     }
@@ -40,4 +40,4 @@ const bookReducers = (state = initialState, action) => {
   }
 };
 
-export default bookReducers;
+export default authorReducers;

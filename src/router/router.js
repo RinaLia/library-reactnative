@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Provider} from 'react-redux';
+import {connect} from 'react-redux';
 import store from '../redux/store';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,6 +19,7 @@ import Home from '../screens/Home';
 import Author from '../screens/Author';
 import Genre from '../screens/Genre';
 import History from '../screens/History';
+import {login} from '../redux/action/auth';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -80,7 +82,7 @@ class Tab extends Component {
   }
 }
 
-export default class App extends Component {
+class Route extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -91,66 +93,69 @@ export default class App extends Component {
     this.setState({isLogin: true});
   };
   render() {
-    const {isLogin} = this.state;
+    // const {isLogin} = this.state;
+    let isLogin;
+    if (this.props.auth.token !== null) {
+      isLogin = true;
+    } else {
+      isLogin = false;
+    }
     return (
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            {!isLogin && (
-              <>
-                <Stack.Screen
-                  component={props => <Main {...props} />}
-                  options={{
-                    headerShown: false,
-                  }}
-                  name={'main'}
-                />
-                <Stack.Screen
-                  component={props => (
-                    <Register {...props} register={this.register} />
-                  )}
-                  options={{
-                    headerShown: false,
-                  }}
-                  name={'register'}
-                />
-                <Stack.Screen
-                  component={props => <Login {...props} login={this.login} />}
-                  options={{
-                    headerShown: false,
-                  }}
-                  name={'login'}
-                />
-                <Stack.Screen
-                  component={props => (
-                    <Profile {...props} logout={this.logout} />
-                  )}
-                  options={{
-                    headerShown: false,
-                  }}
-                  name={'logout'}
-                />
-              </>
-            )}
-            {isLogin && (
-              <>
-                <Stack.Screen
-                  options={{title: 'Library'}}
-                  component={Tab}
-                  name={'main'}
-                />
-                <Stack.Screen
-                  options={{title: 'Detail'}}
-                  component={Detail}
-                  name={'detail'}
-                />
-              </>
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {!isLogin && (
+            //{!isLogin ?(
+            <>
+              <Stack.Screen
+                component={Main}
+                // {props => <Main {...props} />}
+                options={{
+                  headerShown: false,
+                }}
+                name={'main'}
+              />
+              <Stack.Screen
+                component={Register}
+                // {props => (
+                //   <Register {...props} register={this.register} />
+                // )}
+                options={{
+                  headerShown: false,
+                }}
+                name={'register'}
+              />
+
+              <Stack.Screen
+                component={Login}
+                //{props => <Login {...props} login={this.login} />}
+                options={{
+                  headerShown: false,
+                }}
+                name={'login'}
+              />
+            </>
+          )}
+          {isLogin && (
+            <>
+              <Stack.Screen
+                options={{title: 'Library'}}
+                component={Tab}
+                name={'main'}
+              />
+              <Stack.Screen
+                options={{title: 'Detail'}}
+                component={Detail}
+                name={'detail'}
+              />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
 
-// export default connect(mapStateToProps)(App);
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+export default connect(mapStateToProps)(Route);

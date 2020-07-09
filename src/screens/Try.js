@@ -1,145 +1,93 @@
 import React, {Component} from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  ScrollView,
-  FlatList,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
 
-import {fetchAuthor} from '../../redux/actions/fetchData';
+const Stack = createStackNavigator();
 
-const deviceHeight = Dimensions.get('window').height;
-const deviceWidth = Dimensions.get('window').width;
+import Landing from '../screens/landing';
+import Login from '../screens/login';
+import Register from '../screens/register';
+import Detail from '../screens/detail';
+import Tab from '../screens/botNavbar';
 
-class Profile extends Component {
-  componentDidMount() {
-    this.props.fetchAuthor();
-  }
+class Route extends Component {
   render() {
-    const {authors, isLoading} = this.props.fetchData;
+    let isLogin;
+    if (this.props.auth.token !== null) {
+      isLogin = true;
+    } else {
+      isLogin = false;
+    }
     return (
-      <View style={styles.parent}>
-        <LinearGradient colors={['#380036', '#0CBABA']} style={styles.top}>
-          <Text style={styles.title}>List Authors</Text>
-        </LinearGradient>
-        <View style={styles.btmWrapper}>
-          <FlatList
-            data={authors}
-            renderItem={({item}) => (
-              <Item title={item.author} content={item.description} />
-            )}
-            keyExtractor={item => item.author}
-            // onRefresh={() => this.getData({page: currentPage})}
-            refreshing={isLoading}
-            // onEndReached={this.nextPage}
-            onEndReachedThreshold={0.5}
-          />
-        </View>
-      </View>
-    );
-  }
-}
-
-class Item extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      expanded: false,
-    };
-  }
-  toggleExpand = () => {
-    this.setState({expanded: !this.state.expanded});
-  };
-  render() {
-    return (
-      <View>
-        <TouchableOpacity
-          ref={this.accordian}
-          style={styles.profile}
-          onPress={() => this.toggleExpand()}>
-          <Text style={styles.authorText}>{this.props.title}</Text>
-          <Icon
-            name={this.state.expanded ? 'chevron-up' : 'chevron-down'}
-            size={20}
-            color="#000"
-          />
-        </TouchableOpacity>
-        <View style={styles.parentHr} />
-        {this.state.expanded && (
-          <View style={styles.descWrapper}>
-            <Text style={styles.desc}>{this.props.content}</Text>
-          </View>
-        )}
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {!isLogin ? (
+            <>
+              <Stack.Screen
+                options={{headerShown: false}}
+                component={Landing}
+                name={'landing'}
+              />
+              <Stack.Screen
+                options={{
+                  title: ' ',
+                  headerStyle: {
+                    backgroundColor: '#fff',
+                    elevation: 0,
+                  },
+                  headerTintColor: '#0CBABA',
+                  headerTitleStyle: {
+                    fontWeight: 'bold',
+                  },
+                }}
+                component={Login}
+                name={'login'}
+              />
+              <Stack.Screen
+                options={{
+                  title: ' ',
+                  headerStyle: {
+                    backgroundColor: '#fff',
+                    elevation: 0,
+                  },
+                  headerTintColor: '#0CBABA',
+                  headerTitleStyle: {
+                    fontWeight: 'bold',
+                  },
+                }}
+                component={Register}
+                name={'register'}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen
+                options={{headerShown: false}}
+                component={Tab}
+                name={'main'}
+              />
+              <Stack.Screen
+                options={{
+                  title: 'Detail',
+                  headerStyle: {
+                    backgroundColor: '#380036',
+                    elevation: 0,
+                  },
+                  headerTintColor: '#fff',
+                }}
+                component={Detail}
+                name={'detail'}
+              />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
 const mapStateToProps = state => ({
-  fetchData: state.fetchData,
+  auth: state.auth,
 });
-const mapDispatchToProps = {fetchAuthor};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Profile);
 
-const styles = StyleSheet.create({
-  parent: {
-    backgroundColor: '#fff',
-    height: deviceHeight - 50,
-    width: deviceWidth,
-    position: 'relative',
-    paddingBottom: 50,
-  },
-  top: {
-    padding: 20,
-    width: deviceWidth,
-    height: 400,
-  },
-  text: {
-    color: '#74b9ff',
-    fontSize: 20,
-  },
-  btmWrapper: {
-    top: -300,
-    width: deviceWidth,
-    alignItems: 'center',
-  },
-  title: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  authorText: {
-    color: '#380036',
-    fontSize: 17,
-  },
-  desc: {
-    color: '#fff',
-    fontSize: 15,
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  descWrapper: {
-    padding: 10,
-    backgroundColor: '#380036',
-    borderBottomStartRadius: 5,
-    width: deviceWidth - 50,
-    borderBottomEndRadius: 5,
-  },
-  profile: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 20,
-    width: deviceWidth - 50,
-    backgroundColor: '#fff',
-    elevation: 5,
-  },
-});
+export default connect(mapStateToProps)(Route);

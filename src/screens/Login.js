@@ -7,10 +7,37 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import bg from '../assets/image/bg-login.jpg';
+import {connect} from 'react-redux';
+import {login, clear} from '../redux/action/auth';
 
-export default class Login extends Component {
+class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+    };
+  }
+
+  login = () => {
+    const dataSubmit = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    console.log(dataSubmit);
+
+    const {email, password} = this.state;
+    if (email == '' || password == '') {
+      Alert.alert('Please fill all data');
+    } else {
+      this.props.login(dataSubmit);
+      Alert.alert('Success');
+    }
+  };
+
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -21,12 +48,13 @@ export default class Login extends Component {
           </Text>
         </View>
         <View style={styles.formContainer} />
-        {/* <AuthForm /> */}
         <View style={styles.container2}>
           <TextInput
+            onChangeText={e => {
+              this.setState({email: e});
+            }}
             placeholder="your email"
             returnKeyType="next"
-            onSubmitEditing={() => this.passwordInput.focus()}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -34,14 +62,14 @@ export default class Login extends Component {
           />
           <TextInput
             placeholder="password"
+            onChangeText={e => {
+              this.setState({password: e});
+            }}
             returnKeyType="go"
             secureTextEntry
             style={styles.input}
-            ref={input => (this.passwordInput = input)}
           />
-          <TouchableOpacity
-            onPress={this.props.login}
-            style={styles.buttonContainer}>
+          <TouchableOpacity onPress={this.login} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>LOGIN</Text>
           </TouchableOpacity>
         </View>
@@ -49,6 +77,15 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {login, clear};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Login);
 
 const styles = StyleSheet.create({
   container: {

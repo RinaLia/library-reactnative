@@ -47,24 +47,15 @@ class Home extends Component {
         <View style={historyStyle.header}>
           <Text style={historyStyle.headerText}>Collection</Text>
         </View>
-        {/* <View style={historyStyle.inputWraper}>
-          <TextInput placeholder="Search book ..." />
-        </View> */}
-
+        {console.log('ini book:', bookData)}
         <FlatList
           style={historyStyle.flatWrapper}
           data={bookData}
-          renderItem={({item}) => (
-            <Item title={item.book_title} image={`${API_URL}${item.image}`} />
-          )}
+          renderItem={({item}) => <Item image={`${API_URL}${item.image}`} />}
           keyExtractor={item => item.id}
           numColumns={3}
+          horizontal={false}
         />
-        {/* <View style={historyStyle.btn2}>
-          <TouchableOpacity style={historyStyle.add}>
-            <Text style={historyStyle.textAdd}>Add</Text>
-          </TouchableOpacity>
-        </View> */}
       </View>
     );
   }
@@ -77,10 +68,10 @@ class Item extends Component {
         <View style={historyStyle.flatText}>
           <Text style={historyStyle.textFlat}>{this.props.title}</Text>
           <View style={historyStyle.imageWrapper}>
-            {console.log('ini image => ', this.props.image)}
+            {console.log('ini image loo he => ', this.props.image)}
             <Image
               style={historyStyle.img}
-              source={{uri: `${API_URL}${this.props.image}`}}
+              source={{uri: `${this.props.image}`}}
             />
           </View>
         </View>
@@ -145,16 +136,13 @@ const historyStyle = StyleSheet.create({
     fontSize: 18,
     // backgroundColor: 'red',
   },
-  parent: {
-    flex: 1,
-    backgroundColor: '#FEF9E7',
-    // padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    // borderRadius: 10,
-    // marginHorizontal: 16,
-    // marginTop: 10,
-  },
+  // parent: {
+  //   flex: 1,
+  //   backgroundColor: '#FEF9E7',
+  //   marginVertical: 8,
+  //   marginHorizontal: 16,
+
+  // },
   title: {
     fontSize: 32,
   },
@@ -174,10 +162,11 @@ const historyStyle = StyleSheet.create({
   imageWrapper: {
     width: 100,
     height: 150,
-    margin: 5,
+    margin: 3,
+    backgroundColor: 'red',
 
-    borderRadius: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0)',
+    // borderRadius: 5,
+    // backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   img: {
     height: 100,

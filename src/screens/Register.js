@@ -7,10 +7,37 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {register, clear} from '../redux/action/auth';
 import bg from '../assets/image/bg-login.jpg';
 
-export default class Register extends Component {
+class Register extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+    };
+  }
+
+  register = () => {
+    const dataSubmit = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    console.log(dataSubmit);
+
+    const {email, password} = this.state;
+    if (email == '' || password == '') {
+      Alert.alert('Please fill all data');
+    } else {
+      this.props.register(dataSubmit);
+      this.props.navigation.navigate('login');
+    }
+  };
+
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -24,9 +51,11 @@ export default class Register extends Component {
         {/* <AuthForm /> */}
         <View style={styles.container2}>
           <TextInput
+            onChangeText={e => {
+              this.setState({email: e});
+            }}
             placeholder="your email"
             returnKeyType="next"
-            onSubmitEditing={() => this.passwordInput.focus()}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -37,10 +66,13 @@ export default class Register extends Component {
             returnKeyType="go"
             secureTextEntry
             style={styles.input}
-            ref={input => (this.passwordInput = input)}
+            onChangeText={e => {
+              this.setState({password: e});
+            }}
           />
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('login')}
+            // onPress={() => this.props.navigation.navigate('login')}
+            onPress={this.register}
             style={styles.buttonContainer}>
             <Text style={styles.buttonText}>REGISTER</Text>
           </TouchableOpacity>
@@ -49,6 +81,15 @@ export default class Register extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {register, clear};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Register);
 
 const styles = StyleSheet.create({
   container: {

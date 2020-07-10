@@ -25,6 +25,7 @@ class Home extends Component {
     this.state = {
       bookData: [],
       isLoading: true,
+      token: '',
     };
   }
 
@@ -35,7 +36,8 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    // console.log('book: ', this.props.book);
+    // this.props.auth.token;
+    // console.log('token ', token);
     this.fetchData();
   }
 
@@ -44,6 +46,12 @@ class Home extends Component {
     return (
       <View style={historyStyle.itemContainer}>
         <Image source={bg} style={historyStyle.accent1} />
+        <View style={historyStyle.search}>
+          <TextInput
+            style={historyStyle.searchInput}
+            placeholder="Search book"
+          />
+        </View>
         <View style={historyStyle.header}>
           <Text style={historyStyle.headerText}>Collection</Text>
         </View>
@@ -51,7 +59,9 @@ class Home extends Component {
         <FlatList
           style={historyStyle.flatWrapper}
           data={bookData}
-          renderItem={({item}) => <Item image={`${API_URL}${item.image}`} />}
+          renderItem={({item}) => (
+            <Item title={item.book_title} image={`${API_URL}${item.image}`} />
+          )}
           keyExtractor={item => item.id}
           numColumns={3}
           horizontal={false}
@@ -66,13 +76,13 @@ class Item extends Component {
     return (
       <View style={historyStyle.parent}>
         <View style={historyStyle.flatText}>
-          <Text style={historyStyle.textFlat}>{this.props.title}</Text>
           <View style={historyStyle.imageWrapper}>
             {console.log('ini image loo he => ', this.props.image)}
             <Image
               style={historyStyle.img}
               source={{uri: `${this.props.image}`}}
             />
+            {/* <Text style={historyStyle.textFlat}>{this.props.title}</Text> */}
           </View>
         </View>
       </View>
@@ -82,6 +92,7 @@ class Item extends Component {
 
 const mapStateToProps = state => ({
   book: state.book,
+  // auth: state.auth,
 });
 const mapDispatchToProps = {getBook};
 export default connect(
@@ -93,41 +104,39 @@ const historyStyle = StyleSheet.create({
   accent1: {
     position: 'absolute',
     width: deviceWidth,
-    // height: deviceHeight,
     zIndex: 0,
-    // flex: 1,
   },
-  // accentOverlay: {
-  //   position: 'absolute',
-  //   width: deviceWidth,
-  //   height: deviceHeight,
-  // },
   header: {
     alignItems: 'center',
-    // color: 'white',
-    // justifyContent: 'center',
+  },
+  searchInput: {
+    backgroundColor: '#E5E8E8',
+    borderRadius: 30,
+    width: deviceWidth - 30,
+    marginTop: 35,
+    alignSelf: 'center',
   },
   headerText: {
     color: 'white',
     fontSize: 25,
-    marginTop: 20,
+    marginTop: 30,
     fontFamily: 'monospace',
-  },
-  flatText: {
-    // marginVertical: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingVertical: 5,
-
-    // backgroundColor: 'black',
-  },
-  textFlat: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    fontFamily: 'monospace',
+    alignSelf: 'flex-start',
     paddingLeft: 10,
+  },
+  // flatText: {
+  //   display: 'flex',
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center',
+  //   flexDirection: 'row',
+  //   paddingVertical: 5,
+  // },
+  textFlat: {
+    fontSize: 13,
+    //fontWeight: 'bold',
+    fontFamily: 'monospace',
+    // paddingLeft: 10,
+    backgroundColor: 'red',
   },
 
   label: {
@@ -147,7 +156,8 @@ const historyStyle = StyleSheet.create({
     fontSize: 32,
   },
   flatWrapper: {
-    marginTop: 40,
+    marginTop: 15,
+    // alignSelf: 'stretch',
   },
 
   // btn2: {
@@ -164,11 +174,15 @@ const historyStyle = StyleSheet.create({
     height: 150,
     margin: 3,
     backgroundColor: 'red',
-
-    // borderRadius: 5,
-    // backgroundColor: 'rgba(255, 255, 255, 0)',
+    borderRadius: 5,
+    //backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   img: {
-    height: 100,
+    // height: 100,
+    flex: 1,
+    height: undefined,
+    width: undefined,
+    borderRadius: 5,
+    resizeMode: 'cover',
   },
 });

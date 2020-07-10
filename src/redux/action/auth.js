@@ -9,4 +9,22 @@ const login = dataSubmit => {
   };
 };
 
-export {login};
+const register = dataSubmit => {
+  return {
+    type: 'REGISTER',
+    payload: axios().post(`${REACT_APP_URL}books/auth/register`, dataSubmit),
+  };
+};
+
+const logout = () => {
+  return {
+    type: 'LOGOUT',
+  };
+};
+
+const clear = () => {
+  return {
+    type: 'CLEAR',
+  };
+};
+export {login, register, logout, clear};

@@ -8,6 +8,8 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {logout} from '../redux/action/auth';
 
 import bg from '../assets/image/bg-profile.jpg';
 import avatar from '../assets/image/avatar.jpg';
@@ -16,7 +18,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default class Profile extends Component {
+class Profile extends Component {
+  logout = () => {
+    this.props.logout();
+    this.props.navigation.navigate('main');
+  };
   render() {
     return (
       <KeyboardAvoidingView>
@@ -43,7 +49,7 @@ export default class Profile extends Component {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('main')}
+            onPress={this.logout}
             style={profileStyle.btnLogout}>
             <Text style={profileStyle.textLogout}>Logout</Text>
           </TouchableOpacity>
@@ -52,6 +58,15 @@ export default class Profile extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {logout};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Profile);
 
 const profileStyle = StyleSheet.create({
   accent1: {

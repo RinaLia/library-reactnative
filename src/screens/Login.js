@@ -19,6 +19,7 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      isError: false,
     };
   }
 
@@ -28,13 +29,11 @@ class Login extends Component {
       password: this.state.password,
     };
     console.log(dataSubmit);
-
     const {email, password} = this.state;
     if (email == '' || password == '') {
       Alert.alert('Please fill all data');
     } else {
       this.props.login(dataSubmit);
-      Alert.alert('Success');
     }
   };
 

@@ -3,9 +3,8 @@ import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Provider} from 'react-redux';
+
 import {connect} from 'react-redux';
-import store from '../redux/store';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
@@ -19,7 +18,6 @@ import Home from '../screens/Home';
 import Author from '../screens/Author';
 import Genre from '../screens/Genre';
 import History from '../screens/History';
-import {login} from '../redux/action/auth';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -30,6 +28,7 @@ class Tab extends Component {
         <BottomTab.Screen
           options={{
             title: 'Home',
+
             tabBarIcon: ({color, size}) => (
               <Icon name="home" color={color} size={size} />
             ),
@@ -83,27 +82,22 @@ class Tab extends Component {
 }
 
 class Route extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLogin: false,
-    };
-  }
   login = () => {
     this.setState({isLogin: true});
+    this.setState({isError: true});
   };
   render() {
     // const {isLogin} = this.state;
-    let isLogin;
-    if (this.props.auth.token !== null) {
-      isLogin = true;
-    } else {
-      isLogin = false;
-    }
+    // let isLogin;
+    // if (this.props.auth.token !== null) {
+    //   this.setstate.isLogin = true;
+    // } else {
+    //   isLogin = false;
+    // }
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          {!isLogin && (
+          {!this.props.auth.isLogin && (
             //{!isLogin ?(
             <>
               <Stack.Screen
@@ -115,10 +109,9 @@ class Route extends Component {
                 name={'main'}
               />
               <Stack.Screen
-                component={Register}
-                // {props => (
-                //   <Register {...props} register={this.register} />
-                // )}
+                component={props => (
+                  <Register {...props} register={this.register} />
+                )}
                 options={{
                   headerShown: false,
                 }}
@@ -135,10 +128,10 @@ class Route extends Component {
               />
             </>
           )}
-          {isLogin && (
+          {this.props.auth.isLogin && (
             <>
               <Stack.Screen
-                options={{title: 'Library'}}
+                options={{title: 'Library', headerShown: false}}
                 component={Tab}
                 name={'main'}
               />

@@ -14,6 +14,7 @@ import {connect} from 'react-redux';
 import {getBook} from '../redux/action/book';
 import bg from '../assets/image/bg-profile.jpg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -25,7 +26,7 @@ class Home extends Component {
     this.state = {
       bookData: [],
       isLoading: true,
-      token: '',
+      search: '',
     };
   }
 
@@ -35,9 +36,16 @@ class Home extends Component {
     this.setState({bookData, isLoading});
   };
 
+  handleSearch = () => {
+    const {search} = this.state;
+    this.props.getBook('search='.concat(search.toLowerCase()));
+    const {bookData} = this.props.book;
+    this.setState({bookData});
+    // this.setState({search: e});
+    console.log('search', search);
+  };
+
   componentDidMount() {
-    // this.props.auth.token;
-    // console.log('token ', token);
     this.fetchData();
   }
 
@@ -48,14 +56,23 @@ class Home extends Component {
         <Image source={bg} style={historyStyle.accent1} />
         <View style={historyStyle.search}>
           <TextInput
+            // {console.log('search:', this. handleSearch)}
+            onChangeText={e => {
+              this.setState({search: e});
+            }}
+            onSubmitEditing={this.handleSearch}
             style={historyStyle.searchInput}
             placeholder="Search book"
+
+            // {console.log('search:',this.handleSearch )}
           />
+          {/* <Icon name="search" /> */}
+          {/* <TouchableOpacity onPress={this.handleSearch} /> */}
         </View>
         <View style={historyStyle.header}>
           <Text style={historyStyle.headerText}>Collection</Text>
         </View>
-        {console.log('ini book:', bookData)}
+        {/* {console.log('ini book:', bookData)} */}
         <FlatList
           style={historyStyle.flatWrapper}
           data={bookData}
@@ -76,14 +93,18 @@ class Item extends Component {
     return (
       <View style={historyStyle.parent}>
         <View style={historyStyle.flatText}>
-          <View style={historyStyle.imageWrapper}>
-            {console.log('ini image loo he => ', this.props.image)}
-            <Image
-              style={historyStyle.img}
-              source={{uri: `${this.props.image}`}}
-            />
-            {/* <Text style={historyStyle.textFlat}>{this.props.title}</Text> */}
-          </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('detail')}>
+            <View style={historyStyle.imageWrapper}>
+              {/* {console.log('ini image loo he => ', this.props.image)} */}
+              <Image
+                style={historyStyle.img}
+                source={{uri: `${this.props.image}`}}
+              />
+
+              <Text style={historyStyle.textFlat}>{this.props.title}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -136,7 +157,7 @@ const historyStyle = StyleSheet.create({
     //fontWeight: 'bold',
     fontFamily: 'monospace',
     // paddingLeft: 10,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
   },
 
   label: {
@@ -157,6 +178,10 @@ const historyStyle = StyleSheet.create({
   },
   flatWrapper: {
     marginTop: 15,
+    alignSelf: 'center',
+    //flex: 1,
+    //justifyContent: 'space-between',
+
     // alignSelf: 'stretch',
   },
 
@@ -173,9 +198,10 @@ const historyStyle = StyleSheet.create({
     width: 100,
     height: 150,
     margin: 3,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     borderRadius: 5,
-    //backgroundColor: 'rgba(255, 255, 255, 0)',
+
+    backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   img: {
     // height: 100,

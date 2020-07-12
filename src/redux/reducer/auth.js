@@ -7,6 +7,7 @@ const initialState = {
   successMsg: '',
   token: null,
   dataLogin: [],
+  isLogin: false,
 };
 
 const auth = (state = initialState, action) => {

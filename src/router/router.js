@@ -97,6 +97,7 @@ class Route extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
+          {console.log(this.props.auth.isLogin)}
           {!this.props.auth.isLogin && (
             //{!isLogin ?(
             <>

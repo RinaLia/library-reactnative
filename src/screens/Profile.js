@@ -21,7 +21,6 @@ const deviceHeight = Dimensions.get('window').height;
 class Profile extends Component {
   logout = () => {
     this.props.logout();
-    this.props.navigation.navigate('main');
   };
   render() {
     return (

@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getBook} from '../redux/action/book';
+import {getGenre} from '../redux/action/genre';
 import bg from '../assets/image/bg-profile.jpg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -27,6 +27,7 @@ class Home extends Component {
       bookData: [],
       isLoading: true,
       search: '',
+      genreData: [],
     };
   }
 
@@ -45,12 +46,19 @@ class Home extends Component {
     console.log('search', search);
   };
 
+  fetchGenre = () => {
+    this.props.getGenre();
+    const {genreData, isLoading} = this.props.genre;
+    this.setState({genreData, isLoading});
+  };
+
   componentDidMount() {
     this.fetchData();
   }
 
   render() {
     const {bookData, isLoading} = this.state;
+    const {genreData} = this.state;
     return (
       <View style={historyStyle.itemContainer}>
         <Image source={bg} style={historyStyle.accent1} />
@@ -72,7 +80,13 @@ class Home extends Component {
         <View style={historyStyle.header}>
           <Text style={historyStyle.headerText}>Collection</Text>
         </View>
-        {/* {console.log('ini book:', bookData)} */}
+        {/* <View style={historyStyle.genre}>
+          <TouchableOpacity style={historyStyle.genreText}>
+            {this.props.title}
+            <Text style={historyStyle.genreText1}>Genre</Text>
+          </TouchableOpacity>
+        </View> */}
+
         <FlatList
           style={historyStyle.flatWrapper}
           data={bookData}
@@ -110,12 +124,13 @@ class Item extends Component {
     );
   }
 }
-
+//width navigation(Detail)
 const mapStateToProps = state => ({
   book: state.book,
+  genre: state.genre,
   // auth: state.auth,
 });
-const mapDispatchToProps = {getBook};
+const mapDispatchToProps = {getBook, getGenre};
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
@@ -195,13 +210,13 @@ const historyStyle = StyleSheet.create({
     fontSize: 16,
   },
   imageWrapper: {
-    width: 100,
+    width: 110,
     height: 150,
     margin: 3,
     // backgroundColor: 'red',
     borderRadius: 5,
 
-    backgroundColor: 'rgba(255, 255, 255, 0)',
+    // backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   img: {
     // height: 100,
@@ -210,5 +225,15 @@ const historyStyle = StyleSheet.create({
     width: undefined,
     borderRadius: 5,
     resizeMode: 'cover',
+  },
+  genre: {
+    backgroundColor: 'red',
+    paddingLeft: 13,
+    fontSize: 15,
+    borderRadius: 5,
+    width: deviceWidth - 250,
+  },
+  parent: {
+    margin: 5,
   },
 });

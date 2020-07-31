@@ -8,4 +8,5 @@ const getBook = param => {
     payload: axios().get(url),
   };
 };
+
 export {getBook};

@@ -89,7 +89,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#AED6F1',
+    backgroundColor: '#A9DFBF',
   },
   logoContainer: {
     alignItems: 'center',
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    backgroundColor: '#5499C7',
+    backgroundColor: '#1E8449',
     paddingVertical: 15,
   },
   buttonText: {

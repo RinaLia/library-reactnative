@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import bg from '../assets/image/bg-profile.jpg';
+// import logo from '../assets/image/logo.jpg'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;

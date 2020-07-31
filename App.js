@@ -12,8 +12,6 @@ export default class App extends Component {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <Router />
-          {/* <Penulis /> */}
-          {/* <His /> */}
         </PersistGate>
       </Provider>
     );

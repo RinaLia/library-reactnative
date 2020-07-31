@@ -52,11 +52,11 @@ class Genre extends Component {
           renderItem={({item}) => <Item title={item.name} />}
           keyExtractor={item => item.id}
         />
-        <View style={historyStyle.btn2}>
+        {/* <View style={historyStyle.btn2}>
           <TouchableOpacity style={historyStyle.add}>
             <Text style={historyStyle.textAdd}>Add</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -73,14 +73,14 @@ class Item extends Component {
         {/* <View style={historyStyle.accentOverlay} /> */}
         <View style={historyStyle.flatText}>
           <Text style={historyStyle.textFlat}>{this.props.title}</Text>
-          <View style={historyStyle.btn1}>
+          {/* <View style={historyStyle.btn1}>
             <TouchableOpacity style={historyStyle.edit}>
               <Text>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity style={historyStyle.del}>
               <Text>Del</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </View>
     );

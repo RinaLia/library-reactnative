@@ -40,19 +40,19 @@
 ## Screenshot App
 
 <kbd>
-<img src="screenshot/dashboard.jpeg" width="200" alt="dashboard">
+<img src="screenshot/dashboard.jpeg" width="150" alt="dashboard">
 </kbd>
 
 <kbd>
-<img src="screenshot/login.jpeg" width="200" alt="loginscreen">
+<img src="screenshot/login.jpeg" width="150" alt="loginscreen">
 </kbd>
 
 <kbd>
-<img src="screenshot/genre.jpeg" width="200" alt="genre">
+<img src="screenshot/genre.jpeg" width="150" alt="genre">
 </kbd>
 
 <kbd>
-<img src="screenshot/profile.jpeg" width="200" 
+<img src="screenshot/profile.jpeg" width="150" 
 alt="profile">
 </kbd>
 

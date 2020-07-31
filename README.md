@@ -40,11 +40,11 @@
 ## Screenshot App
 
 <kbd>
-<img src="screenshot/dashboard.jpeg" width="150" alt="dashboard">
+<img src="screenshot/login.jpeg" width="150" alt="loginscreen">
 </kbd>
 
 <kbd>
-<img src="screenshot/login.jpeg" width="150" alt="loginscreen">
+<img src="screenshot/dashboard.jpeg" width="150" alt="dashboard">
 </kbd>
 
 <kbd>
